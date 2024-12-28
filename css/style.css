@@ -14,7 +14,7 @@ html {
   color: #222;
   font-size: 1em;
   line-height: 1.4;
-  background-color: rgb(247, 241, 236);
+  background-color: rgb(240, 247, 236);
   font-family: Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -53,10 +53,10 @@ button {
   transition: 0.1s ease all;
 }
 
-.calc-container {
+#calc-container {
   width: 400px;
   height: 600px;
-  margin-top: 10px;
+  margin-top: 20px;
   background-color: black;
   border-radius: 10px;
   padding: 13px;
@@ -73,7 +73,7 @@ button {
   padding: 0px 10px;
 }
 
-.calculation-value {
+#displayed-number {
   width: fit-content;
   font-size: 60px;
 }

@@ -26,27 +26,30 @@
 
   <main class="flex-col h-screen">
     <h1 class="text-center">Javascript Calculator</h1>
-    <div class="calc-container">
+    <div id="calc-container">
       <div class="calc-screen">
-        <h2 class="calculation-value">7</h2>
+        <h2 id="displayed-number">0</h2>
       </div>
       <div class="calc-buttons">
         <button 
-          id="AC" 
+          id="AC"
+          data-operation="clear" 
           aria-label="Clear value" 
           class="feature"
         >
           AC
         </button>
         <button 
-          id="change-sign" 
+          id="change-sign"
+          data-operation="change-sign" 
           aria-label="Change sign" 
           class="feature"
         >
           +/-
         </button>
         <button 
-          id="percent" 
+          id="percent"
+          data-operation="percent" 
           aria-label="Change to percent" 
           class="feature"
         >
@@ -54,6 +57,7 @@
         </button>
         <button 
           id="divide" 
+          data-operation="divide"
           aria-label="Divide" 
           class="operation"
         >
@@ -61,24 +65,28 @@
         </button>
         <button 
           id="seven"
+          data-number="7"
           class="number"
         >
           7
         </button>
         <button 
           id="eight"
+          data-number="8"
           class="number"
         >
           8
         </button>
         <button 
           id="nine"
+          data-number="9"
           class="number"
         > 
           9
         </button>
         <button 
-          id="multiply" 
+          id="multiply"
+          data-operation="multiply"
           aria-label="Multiply"
           class="operation"
         >
@@ -86,24 +94,28 @@
         </button>
         <button
           id="four"
+          data-number="4"
           class="number"
           >
           4
         </button>
         <button
           id="five"
+          data-number="5"
           class="number"
           >
           5
         </button>
         <button
         id="six"
+        data-number="6"
         class="number"
           >
           6
         </button>
         <button
           id="subtract"
+          data-operation="subtract"
           aria-label="Subtract"
           class="operation"
           >
@@ -111,24 +123,28 @@
         </button>
         <button
           id="one"
+          data-number="1"
           class="number"
         >
           1
         </button>
         <button
           id="two"
+          data-number="2"
           class="number"
         >
           2
         </button>
         <button
           id="three"
+          data-number="3"
           class="number"
         >
           3
         </button>
         <button
           id="add"
+          data-operation="add"
           aria-label="Add"
           class="operation"
           >
@@ -136,12 +152,14 @@
         </button>
         <button
           id="zero"
+          data-number="0"
           class="number"
         >
           0
         </button>
         <button
           id="decimal"
+          data-number="."
           aria-label="Decimal"
           class="decimal"
         >
@@ -149,6 +167,7 @@
         </button>
         <button
           id="equals"
+          data-operation="equals"
           aria-label="Equals"
           class="operation"
           >

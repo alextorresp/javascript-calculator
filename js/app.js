@@ -1,4 +1,4 @@
-let currentValue = 0;
+let currentValue = '0';
 
 const displayedValue = document.getElementById('displayed-value');
 const buttonsContainer = document.getElementById('calc-container');
@@ -14,23 +14,22 @@ buttonsContainer.addEventListener('click', (event) => {
 });
 
 function updateValue(number) {
-  if (currentValue.toString().length === 9) {
+  if ((number === '.') && (currentValue.toString().search('\\.') != -1 )) {
+    return
+  };
+
+  if (findAmountOfDigits(currentValue) === 9) {
     return;
-  } else if (currentValue === 0) {
+  } else if (currentValue === '0' && number === '.') {
+    currentValue += number;
+    displayedValue.innerHTML = currentValue;
+  } else if (currentValue === '0') {
     currentValue = number;
     displayedValue.innerHTML = currentValue;
   } else {
     currentValue += number;
     displayedValue.innerHTML = addCommas(currentValue, currentValue.toString().length);
   };
-};
-
-function handleOperation(operation) {
-
-};
-
-function formatCurrentValue(value, valueLength) {
-  
 };
 
 function addCommas(value, length) {
@@ -43,11 +42,22 @@ function addCommas(value, length) {
   }
 };
 
-function findDecimals() {
+function findAmountOfDigits(value) {
+  let index = value.toString().search('\\.');
+  if (index === -1) {
+    return value.toString().length;
+  } else {
+    return value.toString().length - 1;
+  }
+};
+
+function handleOperation(operation) {
 
 };
 
-
+function formatCurrentValue(value, valueLength) {
+  
+};
 
 
 

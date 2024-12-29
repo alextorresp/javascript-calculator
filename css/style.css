@@ -73,7 +73,7 @@ button {
   padding: 0px 10px;
 }
 
-#displayed-number {
+#displayed-value {
   width: fit-content;
   font-size: 60px;
 }

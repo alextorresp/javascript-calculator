@@ -46,13 +46,9 @@ function findAmountOfDigits(value) {
   };
 };
 
-function handleOperation(operation) {
-
-};
-
 function formatValueWithDecimalAndCommas(numberClicked, value) {
-  const buttonClickedIsDecimal = numberClicked === '.';
   const valueAlreadyHasDecimal = value.search('\\.') != -1;
+  const buttonClickedIsDecimal = numberClicked === '.';
 
   if (valueAlreadyHasDecimal && buttonClickedIsDecimal) {
     return;
@@ -62,7 +58,7 @@ function formatValueWithDecimalAndCommas(numberClicked, value) {
   } else if (!valueAlreadyHasDecimal && !buttonClickedIsDecimal) {
     currentValue += numberClicked;
     displayedValue.innerHTML = addCommas(currentValue, currentValue.length);
-  } else if (!buttonClickedIsDecimal && valueAlreadyHasDecimal) {
+  } else if (valueAlreadyHasDecimal && !buttonClickedIsDecimal) {
     let decimalIndex = value.search('\\.');
     let digitsBeforeDecimal = value.slice(0, decimalIndex);
     let digitsWithCommas = addCommas(digitsBeforeDecimal, digitsBeforeDecimal.length);
@@ -70,6 +66,69 @@ function formatValueWithDecimalAndCommas(numberClicked, value) {
     displayedValue.innerHTML = digitsWithCommas + currentValue.slice(decimalIndex);
   };
 };
+
+function handleOperation(operation) {
+  switch (operation) {
+    case 'clear': 
+      handleClear();
+      break;
+    case 'change-sign':
+      changeSign();
+      break;
+    case 'percent':
+      percent();
+      break;
+    case 'divide': 
+      divide();
+      break;
+    case 'multiply':
+      multiply();
+      break;
+    case 'subtract':
+      subtract();
+      break;
+    case 'add':
+      add();
+      break;
+    case 'equals': 
+      equals();
+      break;
+  };
+};
+
+function handleClear() {
+  
+};
+
+function changeSign() {
+  
+};
+
+function percent() {
+  
+};
+
+function divide() {
+  
+};
+
+function multiply() {
+  
+};
+
+function subtract() {
+  
+};
+
+function add() {
+  
+};
+
+function equals() {
+
+};
+
+
 
 
 

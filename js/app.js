@@ -14,15 +14,14 @@ buttonsContainer.addEventListener('click', (event) => {
 });
 
 function updateValue(number) {
-  const currentValueLength = currentValue.toString().length;
-  if (currentValueLength === 9) {
+  if (currentValue.toString().length === 9) {
     return;
   } else if (currentValue === 0) {
     currentValue = number;
     displayedValue.innerHTML = currentValue;
   } else {
     currentValue += number;
-    displayedValue.innerHTML = formatCurrentValue();
+    displayedValue.innerHTML = addCommas(currentValue, currentValue.toString().length);
   };
 };
 
@@ -30,26 +29,23 @@ function handleOperation(operation) {
 
 };
 
-function formatCurrentValue() {
-  let displayValue = currentValue;
-  const currentValueLength = currentValue.toString().length;
-
-  if (currentValueLength === 4) {
-    displayValue = currentValue.slice(0, 1) + ',' + currentValue.slice(1);
-  } else if (currentValueLength === 5) {
-    displayValue = currentValue.slice(0, 2) + ',' + currentValue.slice(2);
-  } else if (currentValueLength === 6) {
-    displayValue = currentValue.slice(0, 3) + ',' + currentValue.slice(3);
-  } else if (currentValueLength === 7) {
-    displayValue = currentValue.slice(0, 1) + ',' + currentValue.slice(1, 4) + ',' + currentValue.slice(4);
-  } else if (currentValueLength === 8) {
-    displayValue = currentValue.slice(0, 2) + ',' + currentValue.slice(2, 5) + ',' + currentValue.slice(5);
-  } else if (currentValueLength === 9) {
-    displayValue = currentValue.slice(0, 3) + ',' + currentValue.slice(3, 6) + ',' + currentValue.slice(6);
-  }
-  return displayValue;
+function formatCurrentValue(value, valueLength) {
+  
 };
 
+function addCommas(value, length) {
+  if (length < 4) {
+    return value;
+  } else if (length >= 4 && length < 7) {
+    return value.slice(0, length - 3) + ',' + value.slice(length - 3);
+  } else {
+    return value.slice(0, length - 6) + ',' + value.slice(length - 6, length - 3) + ',' + value.slice(length - 3);
+  }
+};
+
+function findDecimals() {
+
+};
 
 
 

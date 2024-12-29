@@ -70,7 +70,7 @@ function formatValueWithDecimalAndCommas(numberClicked, value) {
 function handleOperation(operation) {
   switch (operation) {
     case 'clear': 
-      handleClear();
+      clear();
       break;
     case 'change-sign':
       changeSign();
@@ -96,8 +96,9 @@ function handleOperation(operation) {
   };
 };
 
-function handleClear() {
-  
+function clear() {
+  currentValue = '0';
+  displayedValue.innerHTML = currentValue;
 };
 
 function changeSign() {

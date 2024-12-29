@@ -38,11 +38,11 @@ function addCommas(value, length) {
 };
 
 function findAmountOfDigits(value) {
-  let index = value.toString().search('\\.');
+  let index = value.search('\\.');
   if (index === -1) {
-    return value.toString().length;
+    return value.length;
   } else {
-    return value.toString().length - 1;
+    return value.length - 1;
   };
 };
 

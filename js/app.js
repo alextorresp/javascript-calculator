@@ -14,10 +14,6 @@ buttonsContainer.addEventListener('click', (event) => {
 });
 
 function updateValue(number) {
-  if ((number === '.') && (currentValue.toString().search('\\.') != -1 )) {
-    return;
-  };
-
   if (findAmountOfDigits(currentValue) === 9) {
     return;
   } else if (currentValue === '0' && number === '.') {
@@ -26,25 +22,9 @@ function updateValue(number) {
   } else if (currentValue === '0') {
     currentValue = number;
     displayedValue.innerHTML = currentValue;
-  } 
-    // if you don't click . and there is not a period already there
-    else if (number != '.' && currentValue.toString().search('\\.') === -1) {
-    currentValue += number;
-    displayedValue.innerHTML = addCommas(currentValue, currentValue.length);
-  } 
-    // if you click . and there is not a period already there
-    else if ((number === '.') && (currentValue.search('\\.') === -1 )) {
-    displayedValue.innerHTML = addCommas(currentValue, currentValue.length) + '.';
-    currentValue += number;
-  }
-    // if you don't click . and there is a . already there
-    if (number != '.' && currentValue.search('\\.') != -1 ) {
-      let index = currentValue.search('\\.');
-      let digitsBeforeDecimal = currentValue.slice(0, index);
-      let digitsWithCommas = addCommas(digitsBeforeDecimal, digitsBeforeDecimal.length);
-      currentValue += number;
-      displayedValue.innerHTML = digitsWithCommas + currentValue.slice(index);
-    };
+  } else {
+    formatValueWithDecimalAndCommas(number, currentValue);
+  };
 };
 
 function addCommas(value, length) {
@@ -70,8 +50,25 @@ function handleOperation(operation) {
 
 };
 
-function formatCurrentValueToDisplay(numberClicked, currentValue) {
-  
+function formatValueWithDecimalAndCommas(numberClicked, value) {
+  const buttonClickedIsDecimal = numberClicked === '.';
+  const valueAlreadyHasDecimal = value.search('\\.') != -1;
+
+  if (valueAlreadyHasDecimal && buttonClickedIsDecimal) {
+    return;
+  } else if (!valueAlreadyHasDecimal && buttonClickedIsDecimal) {
+    displayedValue.innerHTML = addCommas(value, value.length) + '.';
+    currentValue += numberClicked;
+  } else if (!valueAlreadyHasDecimal && !buttonClickedIsDecimal) {
+    currentValue += numberClicked;
+    displayedValue.innerHTML = addCommas(currentValue, currentValue.length);
+  } else if (!buttonClickedIsDecimal && valueAlreadyHasDecimal) {
+    let decimalIndex = value.search('\\.');
+    let digitsBeforeDecimal = value.slice(0, decimalIndex);
+    let digitsWithCommas = addCommas(digitsBeforeDecimal, digitsBeforeDecimal.length);
+    currentValue += numberClicked;
+    displayedValue.innerHTML = digitsWithCommas + currentValue.slice(decimalIndex);
+  };
 };
 
 

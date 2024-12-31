@@ -84,6 +84,21 @@ function formatValueWithDecimalAndCommas(numberClicked, value) {
   };
 };
 
+function formatCalculatedValue(number) {
+  const numberAlreadyHasDecimal = number.search('\\.') != -1;
+
+  if (numberAlreadyHasDecimal) {
+    let decimalIndex = number.search('\\.');
+    let digitsBeforeDecimal = number.slice(0, decimalIndex);
+    let digitsWithCommas = addCommas(digitsBeforeDecimal, digitsBeforeDecimal.length);
+    currentValue = number;
+    displayedValue.innerHTML = digitsWithCommas + currentValue.slice(decimalIndex);
+  } else if (!numberAlreadyHasDecimal) {
+    displayedValue.innerHTML = addCommas(number, number.length);
+    currentValue = number;
+  };
+};
+
 function handleOperation(button, operation) {
   removeActiveArithmeticButton();
 
@@ -108,33 +123,38 @@ function handleArithmeticOperation(button, operation) {
 
   switch (operation) {
     case 'divide': 
-      divide();
+      updateArithmeticOperation('divide');
       break;
     case 'multiply':
-      multiply();
+      updateArithmeticOperation('multiply');
       break;
     case 'subtract':
-      subtract();
+      updateArithmeticOperation('subtract');
       break;
     case 'add':
-      add();
+      updateArithmeticOperation('add');
       break;
   };
 };
 
 function clear() {
   currentValue = '0';
+  previousValue = null;
+  currentOperation = null;
+  previousOperation = null;
   displayedValue.innerHTML = currentValue;
 };
 
-function updateOperation(operation) {
+function updateArithmeticOperation(operation) {
   currentOperation = operation;
 
-  if (!previousOperation) {
+  if (!previousOperation || (buttonsClicked[buttonsClicked.length - 1] === 'arithmetic-operation')) {
     previousValue = currentValue;
     previousOperation = operation;
-  } else if (previousOperation && (previousValue != currentValue)) {
-    calculateNewCurrentValue();
+  } else if (previousOperation) {
+    calculateCurrentValue(currentValue, previousValue, previousOperation);
+    previousValue = currentValue;
+    previousOperation = operation;
   };
 };
 
@@ -149,8 +169,29 @@ function removeActiveArithmeticButton() {
   arithmeticButtons.forEach(button => button.classList.remove('active-button'));
 };
 
-function calculateNewCurrentValue() {
-  
+function calculateCurrentValue(currVal, prevVal, prevOper) {
+  let calculatedValue = null;
+
+  switch(prevOper) {
+    case 'multiply': 
+      calculatedValue = prevVal * currVal;
+      formatCalculatedValue(calculatedValue.toString());
+      break;
+    case 'divide': 
+      calculatedValue = prevVal / currVal;
+      formatCalculatedValue(calculatedValue.toString());
+      break;
+    case 'add':
+      calculatedValue = Number(prevVal) + Number(currVal);
+      formatCalculatedValue(calculatedValue.toString());
+      break;
+    case 'subtract': 
+      calculatedValue = prevVal - currVal;
+      formatCalculatedValue(calculatedValue.toString());
+      break;
+  };
+
+  return;
 };
 
 function changeSign() {
@@ -166,7 +207,7 @@ function divide() {
 };
 
 function multiply() {
-  updateOperation('multiply');
+  
 };
 
 function subtract() {

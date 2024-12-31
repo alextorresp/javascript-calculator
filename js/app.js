@@ -1,6 +1,8 @@
 let currentValue = '0';
-let previousOperation = null;
 let previousValue = null;
+let currentOperation = null;
+let previousOperation = null;
+let buttonsClicked = [];
 
 const displayedValue = document.getElementById('displayed-value');
 const buttonsContainer = document.getElementById('calc-container');
@@ -10,15 +12,24 @@ buttonsContainer.addEventListener('click', (event) => {
 
   if (button.hasAttribute('data-number')) {
     updateValue(button.getAttribute('data-number'));
+    buttonsClicked.push('number');
   } else if (button.hasAttribute('data-operation')) {
     handleOperation(button, button.getAttribute('data-operation'));
+    buttonsClicked.push('operation');
   } else if (button.hasAttribute('data-arithmetic-operation')) {
-    handleArithmeticOperation(button, button.getAttribute('data-arithmetic-operation'))
+    handleArithmeticOperation(button, button.getAttribute('data-arithmetic-operation'));
+    buttonsClicked.push('arithmetic-operation');
   };
 });
 
 function updateValue(number) {
   removeActiveArithmeticButton();
+
+  if (buttonsClicked[buttonsClicked.length - 1] === 'arithmetic-operation') {
+    number === '.' ? currentValue = '0.' : currentValue = number;
+    displayedValue.innerHTML = currentValue;
+    return;
+  };
 
   if (findAmountOfDigits(currentValue) === 9) {
     return;
@@ -94,6 +105,7 @@ function handleOperation(button, operation) {
 
 function handleArithmeticOperation(button, operation) {
   setActiveArithmeticButton(button);
+
   switch (operation) {
     case 'divide': 
       divide();
@@ -115,11 +127,12 @@ function clear() {
   displayedValue.innerHTML = currentValue;
 };
 
-function updateOperation(currentOperation) {
+function updateOperation(operation) {
+  currentOperation = operation;
+
   if (!previousOperation) {
     previousValue = currentValue;
-    previousOperation = currentOperation;
-    console.log('previousOperation', previousOperation)
+    previousOperation = operation;
   } else if (previousOperation && (previousValue != currentValue)) {
     calculateNewCurrentValue();
   };
@@ -134,6 +147,10 @@ function removeActiveArithmeticButton() {
   let arithmeticButtons = document.querySelectorAll('.arithmetic-operation');
 
   arithmeticButtons.forEach(button => button.classList.remove('active-button'));
+};
+
+function calculateNewCurrentValue() {
+  
 };
 
 function changeSign() {
@@ -162,10 +179,6 @@ function add() {
 
 function equals() {
 
-};
-
-function calculateNewCurrentValue() {
-  
 };
 
 

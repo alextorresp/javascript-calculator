@@ -1,9 +1,9 @@
 :root {
   --off-white: rgb(234, 234, 234);
-  --feature-color: rgb(200, 234, 190);
-  --feature-color-hover: rgb(177, 209, 167);
-  --operation-color: rgb(68, 116, 21);
-  --operation-color-hover: rgb(45, 77, 14);
+  --operation-color: rgb(200, 234, 190);
+  --operation-color-hover: rgb(177, 209, 167);
+  --arithmetic-operation-color: rgb(68, 116, 21);
+  --arithmetic-operation-color-hover: rgb(45, 77, 14);
   --number-color: rgb(116, 116, 116);
   --number-color-hover: rgb(80, 80, 80);
   --calc-screen-height: 30%;
@@ -100,21 +100,21 @@ button {
   background-color: var(--number-color-hover);
 }
 
-.feature {
-  background-color: var(--feature-color);
-}
-
-.feature:hover, feature:focus-visible {
-  background-color: var(--feature-color-hover);
-}
-
 .operation {
   background-color: var(--operation-color);
-  color: white;
 }
 
 .operation:hover, operation:focus-visible {
   background-color: var(--operation-color-hover);
+}
+
+.arithmetic-operation, #equals {
+  background-color: var(--arithmetic-operation-color);
+  color: white;
+}
+
+.arithmetic-operation:hover, #equals:hover, #equals:focus-visible, .arithmetic-operation:focus-visible, .active-button {
+  background-color: var(--arithmetic-operation-color-hover);
   color: white;
 }
 

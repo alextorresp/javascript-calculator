@@ -74,8 +74,7 @@ function formatValueWithDecimalAndCommas(numberClicked, value) {
   if (valueAlreadyHasDecimal && buttonClickedIsDecimal) {
     return null;
   } else if (!valueAlreadyHasDecimal && buttonClickedIsDecimal) {
-    let updatedValue = currentValue + numberClicked;
-    return [updatedValue, addCommas(value, value.length) + '.']
+    return [currentValue + numberClicked, addCommas(value, value.length) + '.']
   } else if (!valueAlreadyHasDecimal && !buttonClickedIsDecimal) {
     let updatedValue = currentValue + numberClicked;
     return [updatedValue, addCommas(updatedValue, updatedValue.length)]

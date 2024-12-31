@@ -40,7 +40,11 @@ function updateValue(number) {
     currentValue = number;
     displayedValue.innerHTML = currentValue;
   } else {
-    formatValueWithDecimalAndCommas(number, currentValue);
+    let formattedValues = formatValueWithDecimalAndCommas(number, currentValue);
+    if (formattedValues) {
+      currentValue = formattedValues[0];
+      displayedValue.innerHTML = formattedValues[1];
+    };
   };
 };
 
@@ -68,19 +72,19 @@ function formatValueWithDecimalAndCommas(numberClicked, value) {
   const buttonClickedIsDecimal = numberClicked === '.';
 
   if (valueAlreadyHasDecimal && buttonClickedIsDecimal) {
-    return;
+    return null;
   } else if (!valueAlreadyHasDecimal && buttonClickedIsDecimal) {
-    displayedValue.innerHTML = addCommas(value, value.length) + '.';
-    currentValue += numberClicked;
+    let updatedValue = currentValue + numberClicked;
+    return [updatedValue, addCommas(value, value.length) + '.']
   } else if (!valueAlreadyHasDecimal && !buttonClickedIsDecimal) {
-    currentValue += numberClicked;
-    displayedValue.innerHTML = addCommas(currentValue, currentValue.length);
+    let updatedValue = currentValue + numberClicked;
+    return [updatedValue, addCommas(updatedValue, updatedValue.length)]
   } else if (valueAlreadyHasDecimal && !buttonClickedIsDecimal) {
     let decimalIndex = value.search('\\.');
     let digitsBeforeDecimal = value.slice(0, decimalIndex);
     let digitsWithCommas = addCommas(digitsBeforeDecimal, digitsBeforeDecimal.length);
-    currentValue += numberClicked;
-    displayedValue.innerHTML = digitsWithCommas + currentValue.slice(decimalIndex);
+    let updatedValue = currentValue + numberClicked;
+    return [updatedValue, digitsWithCommas + updatedValue.slice(decimalIndex)];
   };
 };
 
@@ -146,7 +150,7 @@ function clear() {
 };
 
 function updateArithmeticOperation(operation) {
-  currentOperation = operation;
+  currentOperation = operation; 
 
   if (!previousOperation || (buttonsClicked[buttonsClicked.length - 1] === 'arithmetic-operation')) {
     previousValue = currentValue;

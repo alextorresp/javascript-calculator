@@ -48,7 +48,9 @@ function updateValue(number) {
   };
 };
 
-function addCommas(value, length) {
+function addCommas(value) {
+  length = value.length;
+
   if (length < 4) {
     return value;
   } else if (length >= 4 && length < 7) {
@@ -79,13 +81,13 @@ function formatNumberInput(numberClicked, value) {
   let formattedValue;
 
   if (!hasDecimal && isDecimalClicked) {
-    formattedValue = addCommas(value, value.length) + '.';
+    formattedValue = addCommas(value) + '.';
   } else if (!hasDecimal && !isDecimalClicked) {
-    formattedValue = addCommas(updatedValue, updatedValue.length);
+    formattedValue = addCommas(updatedValue);
   } else if (hasDecimal && !isDecimalClicked) {
     let decimalIndex = value.search('\\.');
     let digitsBeforeDecimal = value.slice(0, decimalIndex);
-    let digitsWithCommas = addCommas(digitsBeforeDecimal, digitsBeforeDecimal.length);
+    let digitsWithCommas = addCommas(digitsBeforeDecimal);
     formattedValue = digitsWithCommas + updatedValue.slice(decimalIndex);
   };
 
@@ -101,11 +103,11 @@ function formatCalculatedValue(number) {
   if (numberAlreadyHasDecimal) {
     let decimalIndex = number.search('\\.');
     let digitsBeforeDecimal = number.slice(0, decimalIndex);
-    let digitsWithCommas = addCommas(digitsBeforeDecimal, digitsBeforeDecimal.length);
+    let digitsWithCommas = addCommas(digitsBeforeDecimal);
     currentValue = number;
     displayedValue.innerHTML = digitsWithCommas + currentValue.slice(decimalIndex);
   } else if (!numberAlreadyHasDecimal) {
-    displayedValue.innerHTML = addCommas(number, number.length);
+    displayedValue.innerHTML = addCommas(number);
     currentValue = number;
   };
 };

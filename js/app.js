@@ -60,13 +60,9 @@ function addCommas(value) {
   };
 };
 
-function findAmountOfDigits(value) {
-  let index = value.search('\\.');
-  if (index === -1) {
-    return value.length;
-  } else {
-    return value.length - 1;
-  };
+function findAmountOfDigits(rawValue) {
+  if (rawValue.includes('.')) return rawValue.length - 1;
+  return rawValue.length;
 };
 
 function formatNumberInput(numberClicked, currentValue) {

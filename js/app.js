@@ -40,10 +40,10 @@ function updateValue(number) {
     currentValue = number;
     displayedValue.innerHTML = currentValue;
   } else {
-    let formattedValues = formatValueWithDecimalAndCommas(number, currentValue);
-    if (formattedValues) {
-      currentValue = formattedValues[0];
-      displayedValue.innerHTML = formattedValues[1];
+    let { rawValue, formattedValue } = formatNumberInput(number, currentValue);
+    if (rawValue && formattedValue) {
+      currentValue = rawValue;
+      displayedValue.innerHTML = formattedValue;
     };
   };
 };
@@ -67,23 +67,31 @@ function findAmountOfDigits(value) {
   };
 };
 
-function formatValueWithDecimalAndCommas(numberClicked, value) {
-  const valueAlreadyHasDecimal = value.search('\\.') != -1;
-  const buttonClickedIsDecimal = numberClicked === '.';
+function formatNumberInput(numberClicked, value) {
+  const hasDecimal = value.includes('.');
+  const isDecimalClicked = numberClicked === '.';
 
-  if (valueAlreadyHasDecimal && buttonClickedIsDecimal) {
+  if (hasDecimal && isDecimalClicked) {
     return null;
-  } else if (!valueAlreadyHasDecimal && buttonClickedIsDecimal) {
-    return [currentValue + numberClicked, addCommas(value, value.length) + '.']
-  } else if (!valueAlreadyHasDecimal && !buttonClickedIsDecimal) {
-    let updatedValue = currentValue + numberClicked;
-    return [updatedValue, addCommas(updatedValue, updatedValue.length)]
-  } else if (valueAlreadyHasDecimal && !buttonClickedIsDecimal) {
+  };
+  
+  let updatedValue = value + numberClicked;
+  let formattedValue;
+
+  if (!hasDecimal && isDecimalClicked) {
+    formattedValue = addCommas(value, value.length) + '.';
+  } else if (!hasDecimal && !isDecimalClicked) {
+    formattedValue = addCommas(updatedValue, updatedValue.length);
+  } else if (hasDecimal && !isDecimalClicked) {
     let decimalIndex = value.search('\\.');
     let digitsBeforeDecimal = value.slice(0, decimalIndex);
     let digitsWithCommas = addCommas(digitsBeforeDecimal, digitsBeforeDecimal.length);
-    let updatedValue = currentValue + numberClicked;
-    return [updatedValue, digitsWithCommas + updatedValue.slice(decimalIndex)];
+    formattedValue = digitsWithCommas + updatedValue.slice(decimalIndex);
+  };
+
+  return {
+    rawValue: updatedValue,
+    formattedValue: formattedValue
   };
 };
 

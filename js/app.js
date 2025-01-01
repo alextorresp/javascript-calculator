@@ -69,24 +69,24 @@ function findAmountOfDigits(value) {
   };
 };
 
-function formatNumberInput(numberClicked, value) {
-  const hasDecimal = value.includes('.');
+function formatNumberInput(numberClicked, currentValue) {
+  const hasDecimal = currentValue.includes('.');
   const isDecimalClicked = numberClicked === '.';
 
   if (hasDecimal && isDecimalClicked) {
     return null;
   };
   
-  let updatedValue = value + numberClicked;
+  let updatedValue = currentValue + numberClicked;
   let formattedValue;
 
   if (!hasDecimal && isDecimalClicked) {
-    formattedValue = addCommas(value) + '.';
+    formattedValue = addCommas(currentValue) + '.';
   } else if (!hasDecimal && !isDecimalClicked) {
     formattedValue = addCommas(updatedValue);
   } else if (hasDecimal && !isDecimalClicked) {
-    let decimalIndex = value.search('\\.');
-    let digitsBeforeDecimal = value.slice(0, decimalIndex);
+    let decimalIndex = currentValue.search('\\.');
+    let digitsBeforeDecimal = currentValue.slice(0, decimalIndex);
     let digitsWithCommas = addCommas(digitsBeforeDecimal);
     formattedValue = digitsWithCommas + updatedValue.slice(decimalIndex);
   };

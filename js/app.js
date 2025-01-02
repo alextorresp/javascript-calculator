@@ -44,8 +44,9 @@ function updateValue(number) {
     displayValue = currentValue;
     displayedValue.innerHTML = displayValue;
   } else {
-    let { rawValue, formattedValue } = updateAndFormatNumberInput(number, currentValue);
-    if (rawValue && formattedValue) {
+    let result = updateAndFormatNumberInput(number, currentValue);
+    if (result) { 
+      const { rawValue, formattedValue } = result;
       currentValue = rawValue;
       displayValue = formattedValue;
       displayedValue.innerHTML = displayValue;

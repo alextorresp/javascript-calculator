@@ -1,5 +1,6 @@
 let currentValue = '0';
 let previousValue = null;
+let displayValue = '0';
 let currentOperation = null;
 let previousOperation = null;
 let buttonsClicked = [];
@@ -27,7 +28,8 @@ function updateValue(number) {
 
   if (buttonsClicked[buttonsClicked.length - 1] === 'arithmetic-operation') {
     number === '.' ? currentValue = '0.' : currentValue = number;
-    displayedValue.innerHTML = currentValue;
+    displayValue = currentValue;
+    displayedValue.innerHTML = displayValue;
     return;
   };
 
@@ -35,15 +37,18 @@ function updateValue(number) {
     return;
   } else if (currentValue === '0' && number === '.') {
     currentValue += number;
-    displayedValue.innerHTML = currentValue;
+    displayValue = currentValue;
+    displayedValue.innerHTML = displayValue;
   } else if (currentValue === '0') {
     currentValue = number;
-    displayedValue.innerHTML = currentValue;
+    displayValue = currentValue;
+    displayedValue.innerHTML = displayValue;
   } else {
     let { rawValue, formattedValue } = updateAndFormatNumberInput(number, currentValue);
     if (rawValue && formattedValue) {
       currentValue = rawValue;
-      displayedValue.innerHTML = formattedValue;
+      displayValue = formattedValue;
+      displayedValue.innerHTML = displayValue;
     };
   };
 };
@@ -66,30 +71,41 @@ function findAmountOfDigits(rawValue) {
   } else if (rawValue.includes('-') || rawValue.includes('.')) {
     return rawValue.length - 1;
   };
-  
+
   return rawValue.length;
 };
 
-function updateAndFormatNumberInput(numberClicked, currentValue) {
-  const hasDecimal = currentValue.includes('.');
+function updateAndFormatNumberInput(numberClicked, currValue) {
+  const hasDecimal = currValue.includes('.');
   const isDecimalClicked = numberClicked === '.';
+  const isNegativeNumber = currValue.includes('-');
 
   if (hasDecimal && isDecimalClicked) {
     return null;
   };
   
-  let updatedValue = currentValue + numberClicked;
+  let updatedValue = currValue + numberClicked;
   let formattedValue;
 
+  if (isNegativeNumber) {
+    updatedValue = updatedValue.replace('-', '');
+    currValue = currValue.replace('-', '');
+  };
+
   if (!hasDecimal && isDecimalClicked) {
-    formattedValue = addCommas(currentValue) + '.';
+    formattedValue = addCommas(currValue) + '.';
   } else if (!hasDecimal && !isDecimalClicked) {
     formattedValue = addCommas(updatedValue);
   } else if (hasDecimal && !isDecimalClicked) {
-    let decimalIndex = currentValue.search('\\.');
-    let digitsBeforeDecimal = currentValue.slice(0, decimalIndex);
+    let decimalIndex = currValue.search('\\.');
+    let digitsBeforeDecimal = currValue.slice(0, decimalIndex);
     let digitsWithCommas = addCommas(digitsBeforeDecimal);
     formattedValue = digitsWithCommas + updatedValue.slice(decimalIndex);
+  };
+
+  if (isNegativeNumber) {
+    formattedValue = '-' + formattedValue;
+    updatedValue = '-' + updatedValue;
   };
 
   return {
@@ -128,7 +144,8 @@ function handleArithmeticOperation(button, operation) {
   } else if (previousOperation) {
     const { rawValue, formattedValue } = calculateCurrentValue(currentValue, previousValue, previousOperation);
     currentValue = rawValue;
-    displayedValue.innerHTML = formattedValue;
+    displayValue = formattedValue;
+    displayedValue.innerHTML = displayValue;
     previousValue = currentValue;
     previousOperation = operation;
   };
@@ -185,6 +202,7 @@ function removeActiveArithmeticButton() {
 
 function clear() {
   currentValue = '0';
+  displayValue = '0';
   previousValue = null;
   currentOperation = null;
   previousOperation = null;
@@ -197,14 +215,25 @@ function equals() {
   } else if (previousOperation && previousValue && currentValue) {
     const { rawValue, formattedValue } = calculateCurrentValue(currentValue, previousValue, previousOperation);
     currentValue = rawValue;
-    displayedValue.innerHTML = formattedValue;
+    displayValue = formattedValue;
+    displayedValue.innerHTML = displayValue;
     previousOperation = null;
     currentOperation = null;
   };
 };
 
 function changeSign() {
-  
+  const isNegativeNumber = currentValue.includes('-');
+
+  if (isNegativeNumber) {
+    currentValue = currentValue.replace('-', '');
+    displayValue = displayValue.replace('-', '');
+  } else if (!isNegativeNumber && currentValue != '0') {
+    currentValue = '-' + currentValue;
+    displayValue = '-' + displayValue;
+  };
+
+  displayedValue.innerHTML = displayValue;
 };
 
 function percent() {

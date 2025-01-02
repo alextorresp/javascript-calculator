@@ -178,28 +178,14 @@ function calculateCurrentValue(currVal, prevVal, prevOper) {
 };
 
 function formatCalculatedValue(value) {
-  const hasDecimal = value.includes('.');
   const isNegativeNumber = value.includes('-');
+  const absValue = isNegativeNumber ? value.slice(1) : value;
+  const [integerPart, decimalPart] = absValue.split('.');
 
-  if (isNegativeNumber) {
-    value = value.replace('-', '');
-  };
+  const formattedInteger = addCommas(integerPart);
+  const formattedValue = decimalPart ? `${formattedInteger}.${decimalPart}` : formattedInteger;
 
-  if (hasDecimal) {
-    let decimalIndex = value.search('\\.');
-    let digitsBeforeDecimal = value.slice(0, decimalIndex);
-    let digitsWithCommas = addCommas(digitsBeforeDecimal);
-
-    if (isNegativeNumber) return '-' + digitsWithCommas + value.slice(decimalIndex);
-    
-    return digitsWithCommas + value.slice(decimalIndex);
-  };
-
-  if (isNegativeNumber) {
-    return '-' + addCommas(value);
-  };
-
-  return addCommas(value);
+  return isNegativeNumber ? `-${formattedValue}` : formattedValue;
 };
 
 function setActiveArithmeticButton(clickedButton) {

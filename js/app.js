@@ -115,73 +115,57 @@ function handleOperation(button, operation) {
 function handleArithmeticOperation(button, operation) {
   setActiveArithmeticButton(button);
 
-  switch (operation) {
-    case 'divide': 
-      updateArithmeticOperation('divide');
-      break;
-    case 'multiply':
-      updateArithmeticOperation('multiply');
-      break;
-    case 'subtract':
-      updateArithmeticOperation('subtract');
-      break;
-    case 'add':
-      updateArithmeticOperation('add');
-      break;
-  };
-};
-
-function updateArithmeticOperation(operation) {
   currentOperation = operation; 
 
   if (!previousOperation || (buttonsClicked[buttonsClicked.length - 1] === 'arithmetic-operation')) {
     previousValue = currentValue;
     previousOperation = operation;
   } else if (previousOperation) {
-    calculateCurrentValue(currentValue, previousValue, previousOperation);
+    const { rawValue, formattedValue } = calculateCurrentValue(currentValue, previousValue, previousOperation);
+    currentValue = rawValue;
+    displayedValue.innerHTML = formattedValue;
     previousValue = currentValue;
     previousOperation = operation;
   };
 };
 
 function calculateCurrentValue(currVal, prevVal, prevOper) {
-  let calculatedValue = null;
+  let calculatedValue, formattedValue;
 
   switch(prevOper) {
     case 'multiply': 
       calculatedValue = prevVal * currVal;
-      formatCalculatedValue(calculatedValue.toString());
       break;
     case 'divide': 
       calculatedValue = prevVal / currVal;
-      formatCalculatedValue(calculatedValue.toString());
       break;
     case 'add':
       calculatedValue = Number(prevVal) + Number(currVal);
-      formatCalculatedValue(calculatedValue.toString());
       break;
     case 'subtract': 
       calculatedValue = prevVal - currVal;
-      formatCalculatedValue(calculatedValue.toString());
       break;
   };
 
-  return;
+  formattedValue = formatCalculatedValue(calculatedValue.toString());
+
+  return {
+    rawValue: calculatedValue,
+    formattedValue: formattedValue
+  };
 };
 
-function formatCalculatedValue(number) {
-  const numberAlreadyHasDecimal = number.search('\\.') != -1;
+function formatCalculatedValue(value) {
+  const hasDecimal = value.includes('.');
 
-  if (numberAlreadyHasDecimal) {
-    let decimalIndex = number.search('\\.');
-    let digitsBeforeDecimal = number.slice(0, decimalIndex);
+  if (hasDecimal) {
+    let decimalIndex = value.search('\\.');
+    let digitsBeforeDecimal = value.slice(0, decimalIndex);
     let digitsWithCommas = addCommas(digitsBeforeDecimal);
-    currentValue = number;
-    displayedValue.innerHTML = digitsWithCommas + currentValue.slice(decimalIndex);
-  } else if (!numberAlreadyHasDecimal) {
-    displayedValue.innerHTML = addCommas(number);
-    currentValue = number;
+    return digitsWithCommas + value.slice(decimalIndex);
   };
+
+  return addCommas(value);
 };
 
 function setActiveArithmeticButton(clickedButton) {
@@ -191,7 +175,6 @@ function setActiveArithmeticButton(clickedButton) {
 
 function removeActiveArithmeticButton() {
   let arithmeticButtons = document.querySelectorAll('.arithmetic-operation');
-
   arithmeticButtons.forEach(button => button.classList.remove('active-button'));
 };
 

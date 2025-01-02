@@ -40,7 +40,7 @@ function updateValue(number) {
     currentValue = number;
     displayedValue.innerHTML = currentValue;
   } else {
-    let { rawValue, formattedValue } = formatNumberInput(number, currentValue);
+    let { rawValue, formattedValue } = updateAndFormatNumberInput(number, currentValue);
     if (rawValue && formattedValue) {
       currentValue = rawValue;
       displayedValue.innerHTML = formattedValue;
@@ -65,7 +65,7 @@ function findAmountOfDigits(rawValue) {
   return rawValue.length;
 };
 
-function formatNumberInput(numberClicked, currentValue) {
+function updateAndFormatNumberInput(numberClicked, currentValue) {
   const hasDecimal = currentValue.includes('.');
   const isDecimalClicked = numberClicked === '.';
 
@@ -150,7 +150,7 @@ function calculateCurrentValue(currVal, prevVal, prevOper) {
   formattedValue = formatCalculatedValue(calculatedValue.toString());
 
   return {
-    rawValue: calculatedValue,
+    rawValue: calculatedValue.toString(),
     formattedValue: formattedValue
   };
 };
@@ -186,6 +186,18 @@ function clear() {
   displayedValue.innerHTML = currentValue;
 };
 
+function equals() {
+  if (!previousOperation) {
+    return;
+  } else if (previousOperation && previousValue && currentValue) {
+    const { rawValue, formattedValue } = calculateCurrentValue(currentValue, previousValue, previousOperation);
+    currentValue = rawValue;
+    displayedValue.innerHTML = formattedValue;
+    previousOperation = null;
+    currentOperation = null;
+  };
+};
+
 function changeSign() {
   
 };
@@ -208,10 +220,6 @@ function subtract() {
 
 function add() {
   
-};
-
-function equals() {
-
 };
 
 

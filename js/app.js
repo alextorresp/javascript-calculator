@@ -179,12 +179,24 @@ function calculateCurrentValue(currVal, prevVal, prevOper) {
 
 function formatCalculatedValue(value) {
   const hasDecimal = value.includes('.');
+  const isNegativeNumber = value.includes('-');
+
+  if (isNegativeNumber) {
+    value = value.replace('-', '');
+  };
 
   if (hasDecimal) {
     let decimalIndex = value.search('\\.');
     let digitsBeforeDecimal = value.slice(0, decimalIndex);
     let digitsWithCommas = addCommas(digitsBeforeDecimal);
+
+    if (isNegativeNumber) return '-' + digitsWithCommas + value.slice(decimalIndex);
+    
     return digitsWithCommas + value.slice(decimalIndex);
+  };
+
+  if (isNegativeNumber) {
+    return '-' + addCommas(value);
   };
 
   return addCommas(value);

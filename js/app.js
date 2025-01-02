@@ -61,7 +61,12 @@ function addCommas(value) {
 };
 
 function findAmountOfDigits(rawValue) {
-  if (rawValue.includes('.')) return rawValue.length - 1;
+  if (rawValue.includes('-') && rawValue.includes('.')) {
+    return rawValue.length - 2;
+  } else if (rawValue.includes('-') || rawValue.includes('.')) {
+    return rawValue.length - 1;
+  };
+  
   return rawValue.length;
 };
 
@@ -203,22 +208,6 @@ function changeSign() {
 };
 
 function percent() {
-  
-};
-
-function divide() {
-  
-};
-
-function multiply() {
-  
-};
-
-function subtract() {
-  
-};
-
-function add() {
   
 };
 

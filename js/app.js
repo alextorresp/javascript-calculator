@@ -93,21 +93,6 @@ function formatNumberInput(numberClicked, currentValue) {
   };
 };
 
-function formatCalculatedValue(number) {
-  const numberAlreadyHasDecimal = number.search('\\.') != -1;
-
-  if (numberAlreadyHasDecimal) {
-    let decimalIndex = number.search('\\.');
-    let digitsBeforeDecimal = number.slice(0, decimalIndex);
-    let digitsWithCommas = addCommas(digitsBeforeDecimal);
-    currentValue = number;
-    displayedValue.innerHTML = digitsWithCommas + currentValue.slice(decimalIndex);
-  } else if (!numberAlreadyHasDecimal) {
-    displayedValue.innerHTML = addCommas(number);
-    currentValue = number;
-  };
-};
-
 function handleOperation(button, operation) {
   removeActiveArithmeticButton();
 
@@ -146,14 +131,6 @@ function handleArithmeticOperation(button, operation) {
   };
 };
 
-function clear() {
-  currentValue = '0';
-  previousValue = null;
-  currentOperation = null;
-  previousOperation = null;
-  displayedValue.innerHTML = currentValue;
-};
-
 function updateArithmeticOperation(operation) {
   currentOperation = operation; 
 
@@ -165,17 +142,6 @@ function updateArithmeticOperation(operation) {
     previousValue = currentValue;
     previousOperation = operation;
   };
-};
-
-function setActiveArithmeticButton(clickedButton) {
-  removeActiveArithmeticButton();
-  clickedButton.classList.add('active-button');
-};
-
-function removeActiveArithmeticButton() {
-  let arithmeticButtons = document.querySelectorAll('.arithmetic-operation');
-
-  arithmeticButtons.forEach(button => button.classList.remove('active-button'));
 };
 
 function calculateCurrentValue(currVal, prevVal, prevOper) {
@@ -201,6 +167,40 @@ function calculateCurrentValue(currVal, prevVal, prevOper) {
   };
 
   return;
+};
+
+function formatCalculatedValue(number) {
+  const numberAlreadyHasDecimal = number.search('\\.') != -1;
+
+  if (numberAlreadyHasDecimal) {
+    let decimalIndex = number.search('\\.');
+    let digitsBeforeDecimal = number.slice(0, decimalIndex);
+    let digitsWithCommas = addCommas(digitsBeforeDecimal);
+    currentValue = number;
+    displayedValue.innerHTML = digitsWithCommas + currentValue.slice(decimalIndex);
+  } else if (!numberAlreadyHasDecimal) {
+    displayedValue.innerHTML = addCommas(number);
+    currentValue = number;
+  };
+};
+
+function setActiveArithmeticButton(clickedButton) {
+  removeActiveArithmeticButton();
+  clickedButton.classList.add('active-button');
+};
+
+function removeActiveArithmeticButton() {
+  let arithmeticButtons = document.querySelectorAll('.arithmetic-operation');
+
+  arithmeticButtons.forEach(button => button.classList.remove('active-button'));
+};
+
+function clear() {
+  currentValue = '0';
+  previousValue = null;
+  currentOperation = null;
+  previousOperation = null;
+  displayedValue.innerHTML = currentValue;
 };
 
 function changeSign() {

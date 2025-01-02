@@ -85,19 +85,15 @@ function updateAndFormatNumberInput(numberClicked, currValue) {
     return null;
   };
   
-  let updatedValue = currValue + numberClicked;
+  const absValue = isNegativeNumber ? currValue.slice(1) : currValue;
+  let updatedValue = absValue + numberClicked;
   let formattedValue;
 
-  if (isNegativeNumber) {
-    updatedValue = updatedValue.replace('-', '');
-    currValue = currValue.replace('-', '');
-  };
-
   if (!hasDecimal && isDecimalClicked) {
-    formattedValue = addCommas(currValue) + '.';
+    formattedValue = `${addCommas(absValue)}.`;
   } else if (!hasDecimal && !isDecimalClicked) {
     formattedValue = addCommas(updatedValue);
-  } else if (hasDecimal && !isDecimalClicked) {
+  } else {
     let decimalIndex = currValue.search('\\.');
     let digitsBeforeDecimal = currValue.slice(0, decimalIndex);
     let digitsWithCommas = addCommas(digitsBeforeDecimal);
@@ -105,8 +101,8 @@ function updateAndFormatNumberInput(numberClicked, currValue) {
   };
 
   if (isNegativeNumber) {
-    formattedValue = '-' + formattedValue;
-    updatedValue = '-' + updatedValue;
+    formattedValue = `-${formattedValue}`;
+    updatedValue = `-${updatedValue}`;
   };
 
   return {

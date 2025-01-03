@@ -232,7 +232,9 @@ function changeSign() {
 };
 
 function percent() {
-  
+  currentValue = (currentValue / 100).toString();
+  displayValue = formatCalculatedValue(currentValue.toString());
+  displayedValue.innerHTML = displayValue;
 };
 
 

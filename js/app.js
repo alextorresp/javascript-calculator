@@ -54,28 +54,6 @@ function updateValue(number) {
   };
 };
 
-function addCommas(value) {
-  length = value.length;
-
-  if (length < 4) {
-    return value;
-  } else if (length >= 4 && length < 7) {
-    return value.slice(0, length - 3) + ',' + value.slice(length - 3);
-  } else {
-    return value.slice(0, length - 6) + ',' + value.slice(length - 6, length - 3) + ',' + value.slice(length - 3);
-  };
-};
-
-function findAmountOfDigits(rawValue) {
-  if (rawValue.includes('-') && rawValue.includes('.')) {
-    return rawValue.length - 2;
-  } else if (rawValue.includes('-') || rawValue.includes('.')) {
-    return rawValue.length - 1;
-  };
-
-  return rawValue.length;
-};
-
 function updateAndFormatNumberInput(numberClicked, currValue) {
   const hasDecimal = currValue.includes('.');
   const isDecimalClicked = numberClicked === '.';
@@ -175,8 +153,14 @@ function calculateCurrentValue(currVal, prevVal, prevOper) {
 };
 
 function formatCalculatedValue(value) {
+  const formattedLength = formatValueBasedOnLength(value);
+  
+  if (formattedLength.includes('e')) {
+    return formattedLength;
+  };
+  
   const isNegativeNumber = value.includes('-');
-  const absValue = isNegativeNumber ? value.slice(1) : value;
+  const absValue = isNegativeNumber ? formattedLength.slice(1) : formattedLength;
   const [integerPart, decimalPart] = absValue.split('.');
 
   const formattedInteger = addCommas(integerPart);
@@ -185,14 +169,14 @@ function formatCalculatedValue(value) {
   return isNegativeNumber ? `-${formattedValue}` : formattedValue;
 };
 
-function setActiveArithmeticButton(clickedButton) {
-  removeActiveArithmeticButton();
-  clickedButton.classList.add('active-button');
-};
+function formatValueBasedOnLength(rawValue) {
+  if (findAmountOfDigits(rawValue) <= 9) return rawValue;
 
-function removeActiveArithmeticButton() {
-  let arithmeticButtons = document.querySelectorAll('.arithmetic-operation');
-  arithmeticButtons.forEach(button => button.classList.remove('active-button'));
+  if (Number(absValue(rawValue)) < 1 || Number(absValue(rawValue)) > 999999999) {
+    return toScientificNotation(rawValue);
+  } else {
+    return roundNumber(rawValue);
+  };
 };
 
 function clear() {
@@ -232,12 +216,62 @@ function changeSign() {
 };
 
 function percent() {
-  currentValue = (currentValue / 100).toString();
+  currentValue = (Number(currentValue) / 100).toString();
   displayValue = formatCalculatedValue(currentValue.toString());
   displayedValue.innerHTML = displayValue;
 };
 
+function addCommas(value) {
+  length = value.length;
 
+  if (length < 4) {
+    return value;
+  } else if (length >= 4 && length < 7) {
+    return value.slice(0, length - 3) + ',' + value.slice(length - 3);
+  } else {
+    return value.slice(0, length - 6) + ',' + value.slice(length - 6, length - 3) + ',' + value.slice(length - 3);
+  };
+};
+
+function findAmountOfDigits(rawValue) {
+  if (rawValue.includes('-') && rawValue.includes('.')) {
+    return rawValue.length - 2;
+  } else if (rawValue.includes('-') || rawValue.includes('.')) {
+    return rawValue.length - 1;
+  };
+
+  return rawValue.length;
+};
+
+function toScientificNotation(rawValue) {
+  const isNegativeNumber = rawValue.startsWith('-');
+  const abValue = absValue(rawValue);
+  const notatedNumber = Number(abValue).toExponential(5).toString();
+  return isNegativeNumber ? `-${notatedNumber}`: notatedNumber;
+};
+
+function roundNumber(value) {
+  const isNegativeNumber = value.startsWith('-');
+  const abValue = absValue(value);
+  const [integerPart, decimalPart] = abValue.split('.');
+  const amountOfDecimalPlaces =  9 - integerPart.length;
+  const roundedNumber = Number(abValue).toFixed(amountOfDecimalPlaces).toString();
+  return isNegativeNumber ? `-${roundedNumber}`: roundedNumber;
+};
+
+function absValue(rawValue) {
+  return rawValue.startsWith('-') ? rawValue.slice(1) : rawValue;
+};
+
+function setActiveArithmeticButton(clickedButton) {
+  removeActiveArithmeticButton();
+  clickedButton.classList.add('active-button');
+};
+
+function removeActiveArithmeticButton() {
+  let arithmeticButtons = document.querySelectorAll('.arithmetic-operation');
+  arithmeticButtons.forEach(button => button.classList.remove('active-button'));
+};
 
 
 

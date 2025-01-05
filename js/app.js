@@ -222,7 +222,7 @@ function percent() {
 };
 
 function addCommas(value) {
-  length = value.length;
+  const length = value.length;
 
   if (length < 4) {
     return value;

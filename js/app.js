@@ -72,8 +72,8 @@ function updateAndFormatNumberInput(numberClicked, currValue) {
   } else if (!hasDecimal && !isDecimalClicked) {
     formattedValue = addCommas(updatedValue);
   } else {
-    let decimalIndex = currValue.search('\\.');
-    let digitsBeforeDecimal = currValue.slice(0, decimalIndex);
+    let decimalIndex = absValue.search('\\.');
+    let digitsBeforeDecimal = absValue.slice(0, decimalIndex);
     let digitsWithCommas = addCommas(digitsBeforeDecimal);
     formattedValue = digitsWithCommas + updatedValue.slice(decimalIndex);
   };

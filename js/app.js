@@ -33,7 +33,6 @@ function handleNumber(number) {
     return;
   };
 
-  console.log(currentValue);
   if (findAmountOfDigits(currentValue) >= 9) {
     return;
   } else if (currentValue === '0' && number === '.') {
@@ -173,7 +172,7 @@ function formatCalculatedValue(value) {
 function formatValueBasedOnLength(rawValue) {
   if (findAmountOfDigits(rawValue) <= 9) return rawValue;
 
-  if (Number(absValue(rawValue)) < 1 || Number(absValue(rawValue)) > 999999999) {
+  if (Number(absValue(rawValue)) < 0.1 || Number(absValue(rawValue)) > 999999999) {
     return toScientificNotation(rawValue);
   } else {
     return roundNumber(rawValue);

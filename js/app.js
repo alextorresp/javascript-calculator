@@ -1,3 +1,4 @@
+const errorMsg = 'Error';
 let currentValue = '0';
 let previousValue = null;
 let displayValue = '0';
@@ -118,6 +119,10 @@ function handleArithmeticOperation(button, operation) {
     previousOperation = operation;
   } else if (previousOperation) {
     const { rawValue, formattedValue } = calculateCurrentValue(currentValue, previousValue, previousOperation);
+    if (rawValue === errorMsg) {
+      handleDivisonByZero();
+      return;
+    };
     currentValue = rawValue;
     displayValue = formattedValue;
     displayedValue.innerHTML = displayValue;
@@ -134,7 +139,7 @@ function calculateCurrentValue(currVal, prevVal, prevOper) {
       calculatedValue = prevVal * currVal;
       break;
     case 'divide': 
-      calculatedValue = prevVal / currVal;
+      calculatedValue = currVal === '0' ? errorMsg : prevVal / currVal;
       break;
     case 'add':
       calculatedValue = Number(prevVal) + Number(currVal);
@@ -153,6 +158,8 @@ function calculateCurrentValue(currVal, prevVal, prevOper) {
 };
 
 function formatCalculatedValue(value) {
+  if (value === errorMsg) return value;
+
   const formattedLength = formatValueBasedOnLength(value);
   
   if (formattedLength.includes('e')) {
@@ -194,6 +201,10 @@ function equals() {
     return;
   } else if (previousOperation && previousValue && currentValue) {
     const { rawValue, formattedValue } = calculateCurrentValue(currentValue, previousValue, previousOperation);
+    if (rawValue === errorMsg) {
+      handleDivisonByZero();
+      return;
+    };
     currentValue = rawValue;
     displayValue = formattedValue;
     displayedValue.innerHTML = displayValue;
@@ -272,6 +283,14 @@ function setActiveArithmeticButton(clickedButton) {
 function removeActiveArithmeticButton() {
   let arithmeticButtons = document.querySelectorAll('.arithmetic-operation');
   arithmeticButtons.forEach(button => button.classList.remove('active-button'));
+};
+
+function handleDivisonByZero() {
+  currentValue = '0';
+  displayValue = errorMsg;
+  displayedValue.innerHTML = displayValue;
+  previousValue = null;
+  previousOperation = null;
 };
 
 

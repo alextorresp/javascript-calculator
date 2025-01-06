@@ -12,7 +12,7 @@ buttonsContainer.addEventListener('click', (event) => {
   const button = event.target;
 
   if (button.hasAttribute('data-number')) {
-    updateValue(button.getAttribute('data-number'));
+    handleNumber(button.getAttribute('data-number'));
     buttonsClicked.push('number');
   } else if (button.hasAttribute('data-operation')) {
     handleOperation(button, button.getAttribute('data-operation'));
@@ -23,7 +23,7 @@ buttonsContainer.addEventListener('click', (event) => {
   };
 });
 
-function updateValue(number) {
+function handleNumber(number) {
   removeActiveArithmeticButton();
 
   if (buttonsClicked[buttonsClicked.length - 1] === 'arithmetic-operation') {

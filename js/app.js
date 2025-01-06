@@ -27,12 +27,12 @@ function handleNumber(number) {
   removeActiveArithmeticButton();
 
   if (buttonsClicked[buttonsClicked.length - 1] === 'arithmetic-operation') {
-    number === '.' ? currentValue = '0.' : currentValue = number;
+    currentValue = number === '.' ? '0.' : number;
     displayValue = currentValue;
     displayedValue.innerHTML = displayValue;
     return;
   };
-
+  
   if (findAmountOfDigits(currentValue) === 9) {
     return;
   } else if (currentValue === '0' && number === '.') {

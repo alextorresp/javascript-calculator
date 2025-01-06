@@ -32,8 +32,9 @@ function handleNumber(number) {
     displayedValue.innerHTML = displayValue;
     return;
   };
-  
-  if (findAmountOfDigits(currentValue) === 9) {
+
+  console.log(currentValue);
+  if (findAmountOfDigits(currentValue) >= 9) {
     return;
   } else if (currentValue === '0' && number === '.') {
     currentValue += number;

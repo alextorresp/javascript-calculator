@@ -186,6 +186,7 @@ function clear() {
   currentOperation = null;
   previousOperation = null;
   displayedValue.innerHTML = currentValue;
+  buttonsClicked = [];
 };
 
 function equals() {

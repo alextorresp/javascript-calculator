@@ -45,7 +45,7 @@ function handleNumber(number) {
     displayValue = currentValue;
     displayedValue.innerHTML = displayValue;
   } else {
-    let result = updateAndFormatNumberInput(number, currentValue);
+    const result = updateAndFormatNumberInput(number, currentValue);
     if (result) { 
       const { rawValue, formattedValue } = result;
       currentValue = rawValue;

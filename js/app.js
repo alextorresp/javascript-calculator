@@ -1,10 +1,10 @@
 const errorMsg = 'Error';
 let currentValue = '0';
-let previousValue = null;
 let displayValue = '0';
+let previousValue = null;
 let currentOperation = null;
 let previousOperation = null;
-let buttonsClicked = [];
+let previousClick = null;
 
 const displayedValue = document.getElementById('displayed-value');
 const buttonsContainer = document.getElementById('calc-container');
@@ -14,44 +14,25 @@ buttonsContainer.addEventListener('click', (event) => {
 
   if (button.hasAttribute('data-number')) {
     handleNumber(button.getAttribute('data-number'));
-    buttonsClicked.push('number');
+    previousClick = 'number';
   } else if (button.hasAttribute('data-operation')) {
     handleOperation(button, button.getAttribute('data-operation'));
-    buttonsClicked.push('operation');
+    previousClick = 'operation';
   } else if (button.hasAttribute('data-arithmetic-operation')) {
     handleArithmeticOperation(button, button.getAttribute('data-arithmetic-operation'));
-    buttonsClicked.push('arithmetic-operation');
+    previousClick = 'arithmetic-operation';
   };
 });
 
-function handleNumber(number) {
-  removeActiveArithmeticButton();
+function addCommas(value) {
+  const length = value.length;
 
-  if (buttonsClicked[buttonsClicked.length - 1] === 'arithmetic-operation') {
-    currentValue = number === '.' ? '0.' : number;
-    displayValue = currentValue;
-    displayedValue.innerHTML = displayValue;
-    return;
-  };
-
-  if (findAmountOfDigits(currentValue) >= 9) {
-    return;
-  } else if (currentValue === '0' && number === '.') {
-    currentValue += number;
-    displayValue = currentValue;
-    displayedValue.innerHTML = displayValue;
-  } else if (currentValue === '0') {
-    currentValue = number;
-    displayValue = currentValue;
-    displayedValue.innerHTML = displayValue;
+  if (length < 4) {
+    return value;
+  } else if (length >= 4 && length < 7) {
+    return value.slice(0, length - 3) + ',' + value.slice(length - 3);
   } else {
-    const result = updateAndFormatNumberInput(number, currentValue);
-    if (result) { 
-      const { rawValue, formattedValue } = result;
-      currentValue = rawValue;
-      displayValue = formattedValue;
-      displayedValue.innerHTML = displayValue;
-    };
+    return value.slice(0, length - 6) + ',' + value.slice(length - 6, length - 3) + ',' + value.slice(length - 3);
   };
 };
 
@@ -90,45 +71,57 @@ function updateAndFormatNumberInput(numberClicked, currValue) {
   };
 };
 
-function handleOperation(button, operation) {
-  removeActiveArithmeticButton();
+function findAmountOfDigits(rawValue) {
+  if (rawValue.includes('-') && rawValue.includes('.')) {
+    return rawValue.length - 2;
+  } else if (rawValue.includes('-') || rawValue.includes('.')) {
+    return rawValue.length - 1;
+  };
 
-  switch (operation) {
-    case 'clear': 
-      clear();
-      break;
-    case 'change-sign':
-      changeSign();
-      break;
-    case 'percent':
-      percent();
-      break;
-    case 'equals': 
-      equals();
-      break;
+  return rawValue.length;
+};
+
+function setActiveArithmeticButton(clickedButton) {
+  removeActiveArithmeticButton();
+  clickedButton.classList.add('active-button');
+};
+
+function removeActiveArithmeticButton() {
+  let arithmeticButtons = document.querySelectorAll('.arithmetic-operation');
+  arithmeticButtons.forEach(button => button.classList.remove('active-button'));
+};
+
+function absValue(rawValue) {
+  return rawValue.startsWith('-') ? rawValue.slice(1) : rawValue;
+};
+
+function formatValueBasedOnLength(rawValue) {
+  if (findAmountOfDigits(rawValue) <= 9) return rawValue;
+
+  if (Number(absValue(rawValue)) < 0.1 || Number(absValue(rawValue)) > 999999999) {
+    return toScientificNotation(rawValue);
+  } else {
+    return roundNumber(rawValue);
   };
 };
 
-function handleArithmeticOperation(button, operation) {
-  setActiveArithmeticButton(button);
+function formatCalculatedValue(value) {
+  if (value === errorMsg) return value;
 
-  currentOperation = operation; 
-
-  if (!previousOperation || (buttonsClicked[buttonsClicked.length - 1] === 'arithmetic-operation')) {
-    previousValue = currentValue;
-    previousOperation = operation;
-  } else if (previousOperation) {
-    const { rawValue, formattedValue } = calculateCurrentValue(currentValue, previousValue, previousOperation);
-    if (rawValue === errorMsg) {
-      handleDivisonByZero();
-      return;
-    };
-    currentValue = rawValue;
-    displayValue = formattedValue;
-    displayedValue.innerHTML = displayValue;
-    previousValue = currentValue;
-    previousOperation = operation;
+  const formattedLength = formatValueBasedOnLength(value);
+  
+  if (formattedLength.includes('e')) {
+    return formattedLength;
   };
+  
+  const isNegativeNumber = value.includes('-');
+  const absValue = isNegativeNumber ? formattedLength.slice(1) : formattedLength;
+  const [integerPart, decimalPart] = absValue.split('.');
+
+  const formattedInteger = addCommas(integerPart);
+  const formattedValue = decimalPart ? `${formattedInteger}.${decimalPart}` : formattedInteger;
+
+  return isNegativeNumber ? `-${formattedValue}` : formattedValue;
 };
 
 function calculateCurrentValue(currVal, prevVal, prevOper) {
@@ -157,32 +150,75 @@ function calculateCurrentValue(currVal, prevVal, prevOper) {
   };
 };
 
-function formatCalculatedValue(value) {
-  if (value === errorMsg) return value;
+function handleArithmeticOperation(button, operation) {
+  setActiveArithmeticButton(button);
 
-  const formattedLength = formatValueBasedOnLength(value);
-  
-  if (formattedLength.includes('e')) {
-    return formattedLength;
+  currentOperation = operation; 
+
+  if (!previousOperation || (previousClick === 'arithmetic-operation')) {
+    previousValue = currentValue;
+    previousOperation = operation;
+  } else if (previousOperation) {
+    const { rawValue, formattedValue } = calculateCurrentValue(currentValue, previousValue, previousOperation);
+    if (rawValue === errorMsg) {
+      handleDivisonByZero();
+      return;
+    };
+    currentValue = rawValue;
+    displayValue = formattedValue;
+    displayedValue.innerHTML = displayValue;
+    previousValue = currentValue;
+    previousOperation = operation;
   };
-  
-  const isNegativeNumber = value.includes('-');
-  const absValue = isNegativeNumber ? formattedLength.slice(1) : formattedLength;
-  const [integerPart, decimalPart] = absValue.split('.');
-
-  const formattedInteger = addCommas(integerPart);
-  const formattedValue = decimalPart ? `${formattedInteger}.${decimalPart}` : formattedInteger;
-
-  return isNegativeNumber ? `-${formattedValue}` : formattedValue;
 };
 
-function formatValueBasedOnLength(rawValue) {
-  if (findAmountOfDigits(rawValue) <= 9) return rawValue;
+function handleNumber(number) {
+  removeActiveArithmeticButton();
 
-  if (Number(absValue(rawValue)) < 0.1 || Number(absValue(rawValue)) > 999999999) {
-    return toScientificNotation(rawValue);
+  if (previousClick === 'arithmetic-operation') {
+    currentValue = number === '.' ? '0.' : number;
+    displayValue = currentValue;
+    displayedValue.innerHTML = displayValue;
+    return;
+  };
+
+  if (findAmountOfDigits(currentValue) >= 9) {
+    return;
+  } else if (currentValue === '0' && number === '.') {
+    currentValue += number;
+    displayValue = currentValue;
+    displayedValue.innerHTML = displayValue;
+  } else if (currentValue === '0') {
+    currentValue = number;
+    displayValue = currentValue;
+    displayedValue.innerHTML = displayValue;
   } else {
-    return roundNumber(rawValue);
+    const result = updateAndFormatNumberInput(number, currentValue);
+    if (result) { 
+      const { rawValue, formattedValue } = result;
+      currentValue = rawValue;
+      displayValue = formattedValue;
+      displayedValue.innerHTML = displayValue;
+    };
+  };
+};
+
+function handleOperation(button, operation) {
+  removeActiveArithmeticButton();
+
+  switch (operation) {
+    case 'clear': 
+      clear();
+      break;
+    case 'change-sign':
+      changeSign();
+      break;
+    case 'percent':
+      percent();
+      break;
+    case 'equals': 
+      equals();
+      break;
   };
 };
 
@@ -193,7 +229,7 @@ function clear() {
   currentOperation = null;
   previousOperation = null;
   displayedValue.innerHTML = currentValue;
-  buttonsClicked = [];
+  previousClick = null;
 };
 
 function equals() {
@@ -233,28 +269,6 @@ function percent() {
   displayedValue.innerHTML = displayValue;
 };
 
-function addCommas(value) {
-  const length = value.length;
-
-  if (length < 4) {
-    return value;
-  } else if (length >= 4 && length < 7) {
-    return value.slice(0, length - 3) + ',' + value.slice(length - 3);
-  } else {
-    return value.slice(0, length - 6) + ',' + value.slice(length - 6, length - 3) + ',' + value.slice(length - 3);
-  };
-};
-
-function findAmountOfDigits(rawValue) {
-  if (rawValue.includes('-') && rawValue.includes('.')) {
-    return rawValue.length - 2;
-  } else if (rawValue.includes('-') || rawValue.includes('.')) {
-    return rawValue.length - 1;
-  };
-
-  return rawValue.length;
-};
-
 function toScientificNotation(rawValue) {
   const isNegativeNumber = rawValue.startsWith('-');
   const abValue = absValue(rawValue);
@@ -269,20 +283,6 @@ function roundNumber(value) {
   const amountOfDecimalPlaces =  9 - integerPart.length;
   const roundedNumber = Number(abValue).toFixed(amountOfDecimalPlaces).toString();
   return isNegativeNumber ? `-${roundedNumber}`: roundedNumber;
-};
-
-function absValue(rawValue) {
-  return rawValue.startsWith('-') ? rawValue.slice(1) : rawValue;
-};
-
-function setActiveArithmeticButton(clickedButton) {
-  removeActiveArithmeticButton();
-  clickedButton.classList.add('active-button');
-};
-
-function removeActiveArithmeticButton() {
-  let arithmeticButtons = document.querySelectorAll('.arithmetic-operation');
-  arithmeticButtons.forEach(button => button.classList.remove('active-button'));
 };
 
 function handleDivisonByZero() {

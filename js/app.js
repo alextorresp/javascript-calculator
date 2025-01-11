@@ -98,7 +98,7 @@ function formatCalculatedValue(value) {
 };
 
 function calculateCurrentValue(currVal, prevVal, prevOper) {
-  let calculatedValue, formattedValue;
+  let calculatedValue;
 
   switch(prevOper) {
     case 'multiply': 
@@ -115,12 +115,7 @@ function calculateCurrentValue(currVal, prevVal, prevOper) {
       break;
   };
 
-  formattedValue = formatCalculatedValue(calculatedValue.toString());
-
-  return {
-    rawValue: calculatedValue.toString(),
-    formattedValue: formattedValue
-  };
+  return calculatedValue.toString();
 };
 
 function handleArithmeticOperation(button, operation) {
@@ -132,12 +127,13 @@ function handleArithmeticOperation(button, operation) {
     previousValue = currentValue;
     previousOperation = operation;
   } else if (previousOperation) {
-    const { rawValue, formattedValue } = calculateCurrentValue(currentValue, previousValue, previousOperation);
-    if (rawValue === errorMsg) {
+    const calculatedValue = calculateCurrentValue(currentValue, previousValue, previousOperation);
+    const formattedValue = formatCalculatedValue(calculatedValue);
+    if (calculatedValue === errorMsg) {
       handleDivisonByZero();
       return;
     };
-    currentValue = rawValue;
+    currentValue = calculatedValue;
     displayValue = formattedValue;
     displayedValue.innerHTML = displayValue;
     previousValue = currentValue;
@@ -168,7 +164,7 @@ function handleNumber(number) {
   } else {
     const result = updateAndFormatNumberInput(number, currentValue);
     if (result) { 
-      const { rawValue, formattedValue } = result;
+      const { rawValue, formattedValue } = result;  
       currentValue = rawValue;
       displayValue = formattedValue;
       displayedValue.innerHTML = displayValue;
@@ -209,12 +205,13 @@ function equals() {
   if (!previousOperation) {
     return;
   } else if (previousOperation && previousValue && currentValue) {
-    const { rawValue, formattedValue } = calculateCurrentValue(currentValue, previousValue, previousOperation);
-    if (rawValue === errorMsg) {
+    const calculatedValue = calculateCurrentValue(currentValue, previousValue, previousOperation);
+    const formattedValue = formatCalculatedValue(calculatedValue);
+    if (calculatedValue === errorMsg) {
       handleDivisonByZero();
       return;
     };
-    currentValue = rawValue;
+    currentValue = calculatedValue;
     displayValue = formattedValue;
     displayedValue.innerHTML = displayValue;
     previousOperation = null;

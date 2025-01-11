@@ -24,16 +24,22 @@ buttonsContainer.addEventListener('click', (event) => {
   };
 });
 
-function addCommas(rawValue) {
-  const length = rawValue.length;
+function addCommas(value) {
+  const [digitsBeforeDecimal, digitsAfterDecimal] = value.split('.');
+  const absoluteValue = value.startsWith('-') ? absValue(digitsBeforeDecimal) : digitsBeforeDecimal;
+  const length = absoluteValue.length;
+  let formattedValue = '';
 
   if (length < 4) {
-    return rawValue;
+    formattedValue = absoluteValue;
   } else if (length >= 4 && length < 7) {
-    return rawValue.slice(0, length - 3) + ',' + rawValue.slice(length - 3);
+    formattedValue = absoluteValue.slice(0, length - 3) + ',' + absoluteValue.slice(length - 3);
   } else {
-    return rawValue.slice(0, length - 6) + ',' + rawValue.slice(length - 6, length - 3) + ',' + rawValue.slice(length - 3);
+    formattedValue = absoluteValue.slice(0, length - 6) + ',' + absoluteValue.slice(length - 6, length - 3) + ',' + absoluteValue.slice(length - 3);
   };
+
+  formattedValue = digitsAfterDecimal ? `${formattedValue}.${digitsAfterDecimal}` : formattedValue;
+  return value.startsWith('-') ? `-${formattedValue}` : formattedValue;
 };
 
 function absValue(rawValue) {
@@ -43,24 +49,20 @@ function absValue(rawValue) {
 function updateAndFormatNumberInput(numberClicked, currValue) {
   const hasDecimal = currValue.includes('.');
   const isDecimalClicked = numberClicked === '.';
-  
-  if (hasDecimal && isDecimalClicked) return null;
-  
-  let updatedValue = absValue(currValue) + numberClicked;
+  let updatedValue = currValue + numberClicked;
   let formattedValue;
 
-  if (!hasDecimal && isDecimalClicked) {
-    formattedValue = `${addCommas(absValue(currValue))}.`;
-  } else if (!hasDecimal && !isDecimalClicked) {
-    formattedValue = addCommas(updatedValue);
+  if (hasDecimal && isDecimalClicked) {
+    return null;
+  } else if (!hasDecimal && isDecimalClicked) {
+    formattedValue = `${addCommas(currValue)}.`;
   } else {
-    const [digitsBeforeDecimal, digitsAfterDecimal] = updatedValue.split('.');
-    formattedValue = `${addCommas(digitsBeforeDecimal)}.${digitsAfterDecimal}`;
+    formattedValue = addCommas(updatedValue);
   };
 
   return {
-    rawValue: currValue.includes('-') ? `-${updatedValue}`: updatedValue,
-    formattedValue: currValue.includes('-') ? `-${formattedValue}`: formattedValue
+    rawValue: updatedValue,
+    formattedValue: formattedValue
   };
 };
 
@@ -90,21 +92,9 @@ function formatValueBasedOnLength(rawValue) {
 
 function formatCalculatedValue(value) {
   if (value === errorMsg) return value;
-
   const formattedLength = formatValueBasedOnLength(value);
-  
-  if (formattedLength.includes('e')) {
-    return formattedLength;
-  };
-  
-  const isNegativeNumber = value.includes('-');
-  const absValue = isNegativeNumber ? formattedLength.slice(1) : formattedLength;
-  const [integerPart, decimalPart] = absValue.split('.');
-
-  const formattedInteger = addCommas(integerPart);
-  const formattedValue = decimalPart ? `${formattedInteger}.${decimalPart}` : formattedInteger;
-
-  return isNegativeNumber ? `-${formattedValue}` : formattedValue;
+  if (formattedLength.includes('e')) return formattedLength;
+  return addCommas(formattedLength);
 };
 
 function calculateCurrentValue(currVal, prevVal, prevOper) {

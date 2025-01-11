@@ -36,38 +36,32 @@ function addCommas(rawValue) {
   };
 };
 
+function absValue(rawValue) {
+  return rawValue.startsWith('-') ? rawValue.slice(1) : rawValue;
+};
+
 function updateAndFormatNumberInput(numberClicked, currValue) {
   const hasDecimal = currValue.includes('.');
   const isDecimalClicked = numberClicked === '.';
-  const isNegativeNumber = currValue.includes('-');
-
-  if (hasDecimal && isDecimalClicked) {
-    return null;
-  };
   
-  const absValue = isNegativeNumber ? currValue.slice(1) : currValue;
-  let updatedValue = absValue + numberClicked;
+  if (hasDecimal && isDecimalClicked) return null;
+  
+  const isNegativeNumber = currValue.includes('-');
+  let updatedValue = absValue(currValue) + numberClicked;
   let formattedValue;
 
   if (!hasDecimal && isDecimalClicked) {
-    formattedValue = `${addCommas(absValue)}.`;
+    formattedValue = `${addCommas(absValue(currValue))}.`;
   } else if (!hasDecimal && !isDecimalClicked) {
     formattedValue = addCommas(updatedValue);
   } else {
-    let decimalIndex = absValue.search('\\.');
-    let digitsBeforeDecimal = absValue.slice(0, decimalIndex);
-    let digitsWithCommas = addCommas(digitsBeforeDecimal);
-    formattedValue = digitsWithCommas + updatedValue.slice(decimalIndex);
-  };
-
-  if (isNegativeNumber) {
-    formattedValue = `-${formattedValue}`;
-    updatedValue = `-${updatedValue}`;
+    const [digitsBeforeDecimal, digitsAfterDecimal] = updatedValue.split('.');
+    formattedValue = `${addCommas(digitsBeforeDecimal)}.${digitsAfterDecimal}`;
   };
 
   return {
-    rawValue: updatedValue,
-    formattedValue: formattedValue
+    rawValue: isNegativeNumber ? `-${updatedValue}`: updatedValue,
+    formattedValue: isNegativeNumber ? `-${formattedValue}`: formattedValue
   };
 };
 
@@ -83,10 +77,6 @@ function setActiveArithmeticButton(clickedButton) {
 function removeActiveArithmeticButton() {
   let arithmeticButtons = document.querySelectorAll('.arithmetic-operation');
   arithmeticButtons.forEach(button => button.classList.remove('active-button'));
-};
-
-function absValue(rawValue) {
-  return rawValue.startsWith('-') ? rawValue.slice(1) : rawValue;
 };
 
 function formatValueBasedOnLength(rawValue) {

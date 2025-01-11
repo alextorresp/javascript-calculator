@@ -24,15 +24,15 @@ buttonsContainer.addEventListener('click', (event) => {
   };
 });
 
-function addCommas(value) {
-  const length = value.length;
+function addCommas(rawValue) {
+  const length = rawValue.length;
 
   if (length < 4) {
-    return value;
+    return rawValue;
   } else if (length >= 4 && length < 7) {
-    return value.slice(0, length - 3) + ',' + value.slice(length - 3);
+    return rawValue.slice(0, length - 3) + ',' + rawValue.slice(length - 3);
   } else {
-    return value.slice(0, length - 6) + ',' + value.slice(length - 6, length - 3) + ',' + value.slice(length - 3);
+    return rawValue.slice(0, length - 6) + ',' + rawValue.slice(length - 6, length - 3) + ',' + rawValue.slice(length - 3);
   };
 };
 

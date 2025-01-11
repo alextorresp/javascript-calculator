@@ -13,13 +13,16 @@ buttonsContainer.addEventListener('click', (event) => {
   const button = event.target;
 
   if (button.hasAttribute('data-number')) {
+    removeActiveArithmeticButton();
     handleNumber(button.getAttribute('data-number'));
     previousClick = 'number';
   } else if (button.hasAttribute('data-operation')) {
-    handleOperation(button, button.getAttribute('data-operation'));
+    removeActiveArithmeticButton();
+    handleOperation(button.getAttribute('data-operation'));
     previousClick = 'operation';
   } else if (button.hasAttribute('data-arithmetic-operation')) {
-    handleArithmeticOperation(button, button.getAttribute('data-arithmetic-operation'));
+    setActiveArithmeticButton(button);
+    handleArithmeticOperation(button.getAttribute('data-arithmetic-operation'));
     previousClick = 'arithmetic-operation';
   };
 });
@@ -28,7 +31,7 @@ function addCommas(value) {
   const [digitsBeforeDecimal, digitsAfterDecimal] = value.split('.');
   const absoluteValue = value.startsWith('-') ? absValue(digitsBeforeDecimal) : digitsBeforeDecimal;
   const length = absoluteValue.length;
-  let formattedValue = '';
+  let formattedValue = '';  
 
   if (length < 4) {
     formattedValue = absoluteValue;
@@ -118,9 +121,7 @@ function calculateCurrentValue(currVal, prevVal, prevOper) {
   return calculatedValue.toString();
 };
 
-function handleArithmeticOperation(button, operation) {
-  setActiveArithmeticButton(button);
-
+function handleArithmeticOperation(operation) {
   currentOperation = operation; 
 
   if (!previousOperation || (previousClick === 'arithmetic-operation')) {
@@ -142,8 +143,6 @@ function handleArithmeticOperation(button, operation) {
 };
 
 function handleNumber(number) {
-  removeActiveArithmeticButton();
-
   if (previousClick === 'arithmetic-operation') {
     currentValue = number === '.' ? '0.' : number;
     displayValue = currentValue;
@@ -172,9 +171,7 @@ function handleNumber(number) {
   };
 };
 
-function handleOperation(button, operation) {
-  removeActiveArithmeticButton();
-
+function handleOperation(operation) {
   switch (operation) {
     case 'clear': 
       clear();

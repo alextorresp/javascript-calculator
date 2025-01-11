@@ -46,7 +46,6 @@ function updateAndFormatNumberInput(numberClicked, currValue) {
   
   if (hasDecimal && isDecimalClicked) return null;
   
-  const isNegativeNumber = currValue.includes('-');
   let updatedValue = absValue(currValue) + numberClicked;
   let formattedValue;
 
@@ -60,8 +59,8 @@ function updateAndFormatNumberInput(numberClicked, currValue) {
   };
 
   return {
-    rawValue: isNegativeNumber ? `-${updatedValue}`: updatedValue,
-    formattedValue: isNegativeNumber ? `-${formattedValue}`: formattedValue
+    rawValue: currValue.includes('-') ? `-${updatedValue}`: updatedValue,
+    formattedValue: currValue.includes('-') ? `-${formattedValue}`: formattedValue
   };
 };
 

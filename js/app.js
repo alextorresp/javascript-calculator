@@ -2,7 +2,6 @@ const errorMsg = 'Error';
 let currentValue = '0';
 let displayValue = '0';
 let previousValue = null;
-let currentOperation = null;
 let previousOperation = null;
 let previousClick = null;
 
@@ -122,8 +121,6 @@ function calculateCurrentValue(currVal, prevVal, prevOper) {
 };
 
 function handleArithmeticOperation(operation) {
-  currentOperation = operation; 
-
   if (!previousOperation || (previousClick === 'arithmetic-operation')) {
     previousValue = currentValue;
     previousOperation = operation;
@@ -192,7 +189,6 @@ function clear() {
   currentValue = '0';
   displayValue = '0';
   previousValue = null;
-  currentOperation = null;
   previousOperation = null;
   displayedValue.innerHTML = currentValue;
   previousClick = null;
@@ -212,7 +208,6 @@ function equals() {
     displayValue = formattedValue;
     displayedValue.innerHTML = displayValue;
     previousOperation = null;
-    currentOperation = null;
   };
 };
 

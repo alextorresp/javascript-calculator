@@ -72,13 +72,7 @@ function updateAndFormatNumberInput(numberClicked, currValue) {
 };
 
 function findAmountOfDigits(rawValue) {
-  if (rawValue.includes('-') && rawValue.includes('.')) {
-    return rawValue.length - 2;
-  } else if (rawValue.includes('-') || rawValue.includes('.')) {
-    return rawValue.length - 1;
-  };
-
-  return rawValue.length;
+  return rawValue.replace(/[^0-9]/g, '').length;
 };
 
 function setActiveArithmeticButton(clickedButton) {

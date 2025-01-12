@@ -1,28 +1,20 @@
-const errorMsg = 'Error';
 let currentValue = '0';
 let displayValue = '0';
 let previousValue = null;
 let previousOperation = null;
 let previousClick = null;
+const errorMsg = 'Error';
 
 const displayedValue = document.getElementById('displayed-value');
 const buttonsContainer = document.getElementById('calc-container');
 
 buttonsContainer.addEventListener('click', (event) => {
-  const button = event.target;
-
-  if (button.hasAttribute('data-number')) {
-    removeActiveArithmeticButton();
-    handleNumber(button.getAttribute('data-number'));
-    previousClick = 'number';
-  } else if (button.hasAttribute('data-operation')) {
-    removeActiveArithmeticButton();
-    handleOperation(button.getAttribute('data-operation'));
-    previousClick = 'operation';
-  } else if (button.hasAttribute('data-arithmetic-operation')) {
-    setActiveArithmeticButton(button);
-    handleArithmeticOperation(button.getAttribute('data-arithmetic-operation'));
-    previousClick = 'arithmetic-operation';
+  if (event.target.hasAttribute('data-number')) {
+    handleNumber(event.target.getAttribute('data-number'));
+  } else if (event.target.hasAttribute('data-operation')) {
+    handleOperation(event.target.getAttribute('data-operation'));
+  } else {
+    handleArithmeticOperation(event.target, event.target.getAttribute('data-arithmetic-operation'));
   };
 });
 
@@ -131,7 +123,9 @@ function setPreviousValues(prevValue, prevOper) {
   previousOperation = prevOper;
 };
 
-function handleArithmeticOperation(operation) {
+function handleArithmeticOperation(button, operation) {
+  setActiveArithmeticButton(button);
+
   if (!previousOperation || (previousClick === 'arithmetic-operation')) {
     previousValue = currentValue;
     previousOperation = operation;
@@ -142,9 +136,13 @@ function handleArithmeticOperation(operation) {
     setValues(calculatedValue, formattedValue);
     setPreviousValues(currentValue, operation);
   };
+
+  previousClick = 'arithmetic-operation';
 };
 
 function handleNumber(number) {
+  removeActiveArithmeticButton();
+  
   if (previousClick === 'arithmetic-operation') {
     const updatedNumber = number === '.' ? '0.' : number;
     setValues(updatedNumber, updatedNumber);
@@ -164,9 +162,14 @@ function handleNumber(number) {
       setValues(rawValue, formattedValue);
     };
   };
+
+  previousClick = 'number';
 };
 
 function handleOperation(operation) {
+  removeActiveArithmeticButton();
+  previousClick = 'operation';
+
   switch (operation) {
     case 'clear': 
       clear();

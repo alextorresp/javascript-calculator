@@ -120,50 +120,48 @@ function calculateCurrentValue(currVal, prevVal, prevOper) {
   return calculatedValue.toString();
 };
 
+function setValues(currValue, dispValue) {
+  currentValue = currValue;
+  displayValue = dispValue;
+  displayedValue.innerHTML = dispValue;
+};
+
+function setPreviousValues(prevValue, prevOper) {
+  previousValue = prevValue;
+  previousOperation = prevOper;
+};
+
 function handleArithmeticOperation(operation) {
   if (!previousOperation || (previousClick === 'arithmetic-operation')) {
     previousValue = currentValue;
     previousOperation = operation;
   } else if (previousOperation) {
     const calculatedValue = calculateCurrentValue(currentValue, previousValue, previousOperation);
+    if (calculatedValue === errorMsg) return handleDivisonByZero();
     const formattedValue = formatCalculatedValue(calculatedValue);
-    if (calculatedValue === errorMsg) {
-      handleDivisonByZero();
-      return;
-    };
-    currentValue = calculatedValue;
-    displayValue = formattedValue;
-    displayedValue.innerHTML = displayValue;
-    previousValue = currentValue;
-    previousOperation = operation;
+    setValues(calculatedValue, formattedValue);
+    setPreviousValues(currentValue, operation);
   };
 };
 
 function handleNumber(number) {
   if (previousClick === 'arithmetic-operation') {
-    currentValue = number === '.' ? '0.' : number;
-    displayValue = currentValue;
-    displayedValue.innerHTML = displayValue;
+    const updatedNumber = number === '.' ? '0.' : number;
+    setValues(updatedNumber, updatedNumber);
     return;
   };
 
-  if (findAmountOfDigits(currentValue) >= 9) {
-    return;
-  } else if (currentValue === '0' && number === '.') {
-    currentValue += number;
-    displayValue = currentValue;
-    displayedValue.innerHTML = displayValue;
+  if (findAmountOfDigits(currentValue) >= 9) return;
+
+  if (currentValue === '0' && number === '.') {
+    setValues(currentValue + number, currentValue + number);
   } else if (currentValue === '0') {
-    currentValue = number;
-    displayValue = currentValue;
-    displayedValue.innerHTML = displayValue;
+    setValues(number, number);
   } else {
     const result = updateAndFormatNumberInput(number, currentValue);
     if (result) { 
       const { rawValue, formattedValue } = result;  
-      currentValue = rawValue;
-      displayValue = formattedValue;
-      displayedValue.innerHTML = displayValue;
+      setValues(rawValue, formattedValue);
     };
   };
 };
@@ -186,11 +184,8 @@ function handleOperation(operation) {
 };
 
 function clear() {
-  currentValue = '0';
-  displayValue = '0';
-  previousValue = null;
-  previousOperation = null;
-  displayedValue.innerHTML = currentValue;
+  setValues('0', '0');
+  setPreviousValues(null, null);
   previousClick = null;
 };
 
@@ -200,13 +195,8 @@ function equals() {
   } else if (previousOperation && previousValue && currentValue) {
     const calculatedValue = calculateCurrentValue(currentValue, previousValue, previousOperation);
     const formattedValue = formatCalculatedValue(calculatedValue);
-    if (calculatedValue === errorMsg) {
-      handleDivisonByZero();
-      return;
-    };
-    currentValue = calculatedValue;
-    displayValue = formattedValue;
-    displayedValue.innerHTML = displayValue;
+    if (calculatedValue === errorMsg) return handleDivisonByZero();
+    setValues(calculatedValue, formattedValue);
     previousOperation = null;
   };
 };
@@ -248,11 +238,8 @@ function roundNumber(value) {
 };
 
 function handleDivisonByZero() {
-  currentValue = '0';
-  displayValue = errorMsg;
-  displayedValue.innerHTML = displayValue;
-  previousValue = null;
-  previousOperation = null;
+  setValues('0', errorMsg)
+  setPreviousValues(null, null);
 };
 
 

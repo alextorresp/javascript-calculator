@@ -15,7 +15,7 @@ buttonsContainer.addEventListener('click', (event) => {
   } else if (event.target.hasAttribute('data-operation')) {
     handleOperation(event.target.getAttribute('data-operation'));
     previousClick = 'operation';
-  } else {
+  } else if (event.target.hasAttribute('data-arithmetic-operation')) {
     handleArithmeticOperation(event.target, event.target.getAttribute('data-arithmetic-operation'));
     previousClick = 'arithmetic-operation';
   };

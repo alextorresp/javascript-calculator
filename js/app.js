@@ -11,10 +11,13 @@ const buttonsContainer = document.getElementById('calc-container');
 buttonsContainer.addEventListener('click', (event) => {
   if (event.target.hasAttribute('data-number')) {
     handleNumber(event.target.getAttribute('data-number'));
+    previousClick = 'number';
   } else if (event.target.hasAttribute('data-operation')) {
     handleOperation(event.target.getAttribute('data-operation'));
+    previousClick = 'operation';
   } else {
     handleArithmeticOperation(event.target, event.target.getAttribute('data-arithmetic-operation'));
+    previousClick = 'arithmetic-operation';
   };
 });
 
@@ -136,8 +139,6 @@ function handleArithmeticOperation(button, operation) {
     setValues(calculatedValue, formattedValue);
     setPreviousValues(currentValue, operation);
   };
-
-  previousClick = 'arithmetic-operation';
 };
 
 function handleNumber(number) {
@@ -162,13 +163,10 @@ function handleNumber(number) {
       setValues(rawValue, formattedValue);
     };
   };
-
-  previousClick = 'number';
 };
 
 function handleOperation(operation) {
   removeActiveArithmeticButton();
-  previousClick = 'operation';
 
   switch (operation) {
     case 'clear': 

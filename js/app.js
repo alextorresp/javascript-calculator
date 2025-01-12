@@ -210,7 +210,7 @@ function changeSign() {
   if (isNegativeNumber) {
     currentValue = currentValue.replace('-', '');
     displayValue = displayValue.replace('-', '');
-  } else if (!isNegativeNumber && currentValue != '0') {
+  } else if (!isNegativeNumber && currentValue !== '0' & currentValue !== '0.') {
     currentValue = '-' + currentValue;
     displayValue = '-' + displayValue;
   };

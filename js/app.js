@@ -82,7 +82,7 @@ function removeActiveArithmeticButton() {
   arithmeticButtons.forEach(button => button.classList.remove('active-button'));
 };
 
-function formatValueBasedOnLength(rawValue) {
+function formatNumberByDigitCount(rawValue) {
   if (findAmountOfDigits(rawValue) <= 9) return rawValue;
 
   if (Number(absValue(rawValue)) < 0.1 || Number(absValue(rawValue)) > 999999999) {
@@ -94,7 +94,7 @@ function formatValueBasedOnLength(rawValue) {
 
 function formatCalculatedValue(value) {
   if (value === errorMsg) return value;
-  const formattedLength = formatValueBasedOnLength(value);
+  const formattedLength = formatNumberByDigitCount(value);
   if (formattedLength.includes('e')) return formattedLength;
   return addCommas(formattedLength);
 };

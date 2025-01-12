@@ -202,17 +202,11 @@ function equals() {
 };
 
 function changeSign() {
-  const isNegativeNumber = currentValue.includes('-');
-
-  if (isNegativeNumber) {
-    currentValue = currentValue.replace('-', '');
-    displayValue = displayValue.replace('-', '');
-  } else if (!isNegativeNumber && currentValue !== '0' & currentValue !== '0.') {
-    currentValue = '-' + currentValue;
-    displayValue = '-' + displayValue;
+  if (currentValue.includes('-')) {
+    setValues(currentValue.replace('-', ''), displayValue.replace('-', ''));
+  } else if (!currentValue.includes('-') && currentValue !== '0' & currentValue !== '0.') {
+    setValues(`-${currentValue}`, `-${displayValue}`);
   };
-
-  displayedValue.innerHTML = displayValue;
 };
 
 function percent() {

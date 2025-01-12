@@ -130,8 +130,7 @@ function handleArithmeticOperation(button, operation) {
   setActiveArithmeticButton(button);
 
   if (!previousOperation || (previousClick === 'arithmetic-operation')) {
-    previousValue = currentValue;
-    previousOperation = operation;
+    setPreviousValues(currentValue, operation);
   } else if (previousOperation) {
     const calculatedValue = calculateCurrentValue(currentValue, previousValue, previousOperation);
     if (calculatedValue === errorMsg) return handleDivisonByZero();
